@@ -1,0 +1,7 @@
+{
+  "name": "Gemini Campus Guide AR",
+  "description": "An AI-powered indoor/outdoor campus navigation assistant using vision-based location detection, AR overlays, and conversational pathfinding.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}

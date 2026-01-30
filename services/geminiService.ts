@@ -1,13 +1,35 @@
 
 import { GoogleGenAI, Type, Modality } from "@google/genai";
 import { SYSTEM_PROMPT, CAMPUS_NODES } from "../constants";
-import { DetectionResult, LocationMetadata, LocationProfile } from "../types";
+import { DetectionResult, LocationMetadata, LocationProfile, ChatMessage } from "../types";
 
 export class GeminiService {
   private ai: GoogleGenAI;
 
   constructor() {
     this.ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+  }
+
+  async chat(message: string, history: ChatMessage[]): Promise<string> {
+    try {
+      const chatHistory = history.map(msg => ({
+        role: msg.role === 'user' ? 'user' : 'model',
+        parts: [{ text: msg.text }]
+      }));
+
+      const response = await this.ai.models.generateContent({
+        model: 'gemini-3-flash-preview',
+        contents: [...chatHistory, { role: 'user', parts: [{ text: message }] }],
+        config: {
+          systemInstruction: "You are a helpful campus assistant. You provide information about buildings, directions, and campus life. Keep responses helpful and concise."
+        }
+      });
+
+      return response.text || "I'm sorry, I couldn't generate a response.";
+    } catch (error) {
+      console.error("Chat error:", error);
+      return "I encountered an error connecting to my brain. Please try again.";
+    }
   }
 
   async trainLocation(images: string[], metadata: LocationMetadata): Promise<string> {

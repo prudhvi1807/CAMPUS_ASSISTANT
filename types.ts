@@ -8,6 +8,14 @@ export interface CampusNode {
   y: number; // Percent of map height
 }
 
+// Added missing CampusEdge interface used in constants.ts and pathfinding logic
+export interface CampusEdge {
+  from: string;
+  to: string;
+  distance: number;
+  instruction?: string;
+}
+
 export interface LocationMetadata {
   name: string;
   block: string;
@@ -21,11 +29,10 @@ export interface LocationProfile extends LocationMetadata {
   imageCount: number;
 }
 
-export interface CampusEdge {
-  from: string;
-  to: string;
-  distance: number;
-  instruction?: string;
+export interface MovementData {
+  status: 'Stationary' | 'Moving';
+  bearing: number; // 0-360 degrees
+  speed: number;
 }
 
 export interface NavigationStep {
